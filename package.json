@@ -1,0 +1,53 @@
+{
+  "name": "vsChat",
+  "displayName": "vsChat",
+  "publisher": "metaleap",
+  "version": "0.0.1",
+  "activationEvents": [ "*" ],
+  "main": "ui/vsc_ext/js/app.js",
+  "contributes": {
+    "views": {
+      "explorer": [
+        {
+          "id": "vsChatTreeView",
+          "name": "vsChat Servers",
+          "icon": "$(comment-discussion)"
+        },
+        {
+          "id": "vsChatWebView",
+          "type": "webview",
+          "name": "Chat Feed",
+          "icon": "$(comment-draft)"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "vsChat.menu",
+        "title": "vsChat",
+        "icon": "$(comment)"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile_ui_vsc_ext && npm run compile_ui_webviews",
+    "compile_ui_vsc_ext": "tsc -p ./ui/vsc_ext",
+    "compile_ui_webviews": "tsc -p ./ui/webviews",
+    "watch": "(rm -rf ./ui/webviews/js/vanjs) && (mkdir -p ./ui/webviews/js/vanjs) && (cp -f ./ui/webviews/vanjs/* ./ui/webviews/js/vanjs/) && (tsc -watch -p ./ui/webviews &) && (tsc -watch -p ./ui/vsc_ext)"
+  },
+  "engines": {
+    "vscode": "^1.82.0"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.1",
+    "@types/node": "18.x",
+    "@types/node-fetch": "^2.6.5",
+    "@types/vscode": "^1.82.0",
+    "@types/vscode-webview": "^1.57.2",
+    "@vscode/codicons": "^0.0.33",
+    "glob": "^10.3.4",
+    "mocha": "^10.2.0",
+    "node-fetch": "^2.7.0",
+    "typescript": "^5.2.2"
+  }
+}
