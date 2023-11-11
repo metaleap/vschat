@@ -1,10 +1,12 @@
 {
     "extends": "../tsconfigbase.json",
     "compilerOptions": {
+        "isolatedModules": true,
+        "target": "ESNext",
+
         "outDir": "./js",
-        "lib": [ "dom", "es2020", "es6" ],
-        "target": "es2020",
-        "module": "es2020",
+        "lib": [ "dom", "esnext" ],
+        "module": "ESNext",
         "moduleResolution": "node"
     }
 }
