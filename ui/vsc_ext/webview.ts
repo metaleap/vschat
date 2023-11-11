@@ -18,9 +18,12 @@ export class VsChatWebViewProvider implements vs.WebviewViewProvider {
         this.webView.title = "vsChat: le Title"
         this.webView.badge = { tooltip: "TODO: not sure where this ever shows up...", value: 3 }
 
+        utils.alert(">>>" + this.webView.webview.cspSource + "<<<")
         this.webView.webview.html = `<!DOCTYPE html>
         <html><head>
             <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta http-equiv="Access-Control-Allow-Origin" content="*">
+            <meta http-equiv="Content-Security-Policy" content="default-src 'unsafe-inline' ${this.webView.webview.cspSource} https://kaffe.up.railway.app/_/userSignInOrReset">
             <link rel='stylesheet' type='text/css' href='${this.htmlUri(utils.cssPath('reset'))}'>
             <link rel='stylesheet' type='text/css' href='${this.htmlUri(utils.cssPath('vscode'))}'>
             <link rel='stylesheet' type='text/css' href='${this.htmlUri(utils.cssPath('main'))}'>

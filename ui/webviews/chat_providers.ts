@@ -1,6 +1,6 @@
-import * as util from './util'
-import * as yo from './yo-sdk'
-import * as youtil from './yo-util'
+import * as util from './util.js'
+import * as yo from './yo-sdk.js'
+import * as youtil from './yo-util.js'
 
 export type ServerImpl = {
     curChannelId: number
@@ -28,6 +28,7 @@ export function newTwitch(): ServerImpl {
 }
 
 export function newKaffe(): ServerImpl {
+    yo.setApiBaseUrl('https://kaffe.up.railway.app')
     let ret_impl: ServerImpl
     let next_since: string | undefined = undefined
     const do_poll_now = async () => {
