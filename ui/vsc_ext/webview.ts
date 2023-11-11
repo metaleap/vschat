@@ -14,9 +14,9 @@ export class VsChatWebViewProvider implements vs.WebviewViewProvider {
             enableScripts: true,
             localResourceRoots: [utils.extUri, utils.homeDirPath],
         }
-        this.webView.badge = { tooltip: "Badge Tooltip", value: 3 }
-        this.webView.description = "My Description"
-        this.webView.title = "My Title"
+        this.webView.description = "some.hint.text.com"
+        this.webView.title = "vsChat: le Title"
+        this.webView.badge = { tooltip: "TODO: not sure where this ever shows up...", value: 3 }
 
         this.webView.webview.html = `<!DOCTYPE html>
         <html><head>

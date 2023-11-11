@@ -10,7 +10,7 @@
       "explorer": [
         {
           "id": "vsChatTreeView",
-          "name": "vsChat Servers",
+          "name": "vsChat: Servers",
           "icon": "$(comment-discussion)"
         },
         {
