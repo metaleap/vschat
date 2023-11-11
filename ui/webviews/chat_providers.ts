@@ -3,23 +3,24 @@ import * as yo from './yo-sdk'
 import * as youtil from './yo-util'
 
 export type ServerImpl = {
-    curChannelId: number,
-    channels: ServerChannel[],
+    curChannelId: number
+    channels: ServerChannel[]
+    logIn: () => void
     loadChannelsList: () => void
 }
 
 export type ServerChannel = {
-    id: number,
-    title: string,
-    readOnly: boolean,
-    posts: ChannelPost[],
-    pollingPaused: boolean,
-    pollingStart: () => void,
-    onFreshPosts: (() => void) | null,
+    id: number
+    title: string
+    readOnly: boolean
+    posts: ChannelPost[]
+    pollingPaused: boolean
+    pollingStart: () => void
+    onFreshPosts: (() => void) | null
 }
 
 export type ChannelPost = {
-    id: number,
+    id: number
 }
 
 export function newTwitch(): ServerImpl {
@@ -64,6 +65,13 @@ export function newKaffe(): ServerImpl {
     ret_impl = {
         curChannelId: 0,
         channels: [],
+        logIn: async () => {
+            try {
+                await yo.api__userSignInOrReset({ NickOrEmailAddr: "foo123@bar.baz", PasswordPlain: "foobar" })
+            } catch (err) {
+                util.alert(youtil.errStr(err))
+            }
+        },
         loadChannelsList: async () => {
             ret_impl.channels = [{
                 id: 0,

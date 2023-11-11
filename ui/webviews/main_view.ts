@@ -7,7 +7,9 @@ const htm = van.tags
 
 export function onInit(vscode: { postMessage: (_: any) => any }, extUri: string, vscCfgSettings: object) {
     util.onInit(vscode, extUri, vscCfgSettings)
+
     van.add(document.body, htm.b({}, "Hello ", htm.i({}, " World")))
+
     window.addEventListener('message', onMessage)
 }
 
