@@ -1,24 +1,11 @@
-import * as º from './_º.js'
-
 export let vs: { postMessage: (_: any) => any }
 export let extUri = ''
 export let vscCfg: any
 
-export function onInit(vscode: { postMessage: (_: any) => any }, baseUri: string, vscCfgSettings: object, appState: º.AppState) {
+export function onInit(vscode: { postMessage: (_: any) => any }, baseUri: string, vscCfgSettings: object) {
     [vs, vscCfg, extUri] = [vscode, vscCfgSettings, baseUri]
     while (extUri.endsWith('/'))
         extUri = extUri.substring(0, extUri.length - 1)
-    if (appState) {
-        if (appState.config)
-            º.appState.config = appState.config
-        if (appState.proj)
-            º.appState.proj = appState.proj
-    }
-    document.body.oncontextmenu = (evt: MouseEvent) => {
-        const target = evt.target as HTMLElement
-        if (!(target && target.tagName && (target.isContentEditable || ['input', 'textarea'].includes(target.tagName.toLowerCase()))))
-            evt.stopPropagation()
-    }
 }
 
 export function codiconCss(name: string) {
@@ -32,8 +19,6 @@ export function codiconPath(name: string) {
 export function alert(msg: string) {
     vs.postMessage({ ident: 'alert', payload: msg })
 }
-
-export const dictClone = º.dictMerge
 
 export function dictMap<TIn, TOut>(to: (_: TIn) => TOut, ...dicts: { [_: string]: TIn }[]) {
     const ret: { [_: string]: TOut } = {}

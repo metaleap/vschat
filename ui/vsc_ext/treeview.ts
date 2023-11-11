@@ -3,8 +3,8 @@ import * as utils from './utils'
 import * as app from './app'
 
 
-import { SidebarWebViewProvider } from './webview'
-let webviewProvider: SidebarWebViewProvider
+import { VsChatWebViewProvider } from './webview'
+let webviewProvider: VsChatWebViewProvider
 
 
 export abstract class TreeDataProvider implements vs.TreeDataProvider<vs.TreeItem> {
@@ -29,7 +29,7 @@ export let treeServers = new TreeServers()
 
 
 export function onInit() {
-    utils.disp(vs.window.registerWebviewViewProvider('vsChatWebView', webviewProvider = new SidebarWebViewProvider()))
+    utils.disp(vs.window.registerWebviewViewProvider('vsChatWebView', webviewProvider = new VsChatWebViewProvider()))
     utils.disp(treeServers.onInit(vs.window.createTreeView('vsChatTreeView', { treeDataProvider: treeServers, showCollapseAll: true })))
 }
 

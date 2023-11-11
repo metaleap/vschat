@@ -7,7 +7,6 @@ export abstract class WebviewPanel {
     private readonly viewTypeIdent: string
     private readonly codicon: string
     private webviewPanel: vs.WebviewPanel
-    reuseKey: string = ''
 
     constructor(viewTypeIdent: string, codicon: string) {
         this.viewTypeIdent = viewTypeIdent
@@ -16,10 +15,6 @@ export abstract class WebviewPanel {
 
     title() { return "TitleHere" }
     htmlUri(localUri: vs.Uri) { return (this.webviewPanel as vs.WebviewPanel).webview.asWebviewUri(localUri) }
-    refreshTitle() {
-        if (this.webviewPanel)
-            this.webviewPanel.title = this.title()
-    }
 
     onMessage(msg: any) {
         switch (msg.ident) {
