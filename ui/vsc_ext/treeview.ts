@@ -2,14 +2,6 @@ import * as vs from 'vscode'
 import * as util from './util'
 
 
-import { TreeServers as TreeServers } from './treeview_servers'
-export let treeServers = new TreeServers()
-
-
-export function onInit() {
-    util.regDisp(treeServers.onInit(vs.window.createTreeView('vsChatTreeView', { treeDataProvider: treeServers, showCollapseAll: true })))
-}
-
 export abstract class TreeDataProvider implements vs.TreeDataProvider<vs.TreeItem> {
     refreshEmitter = new vs.EventEmitter<vs.TreeItem | undefined | null | void>()
     onDidChangeTreeData = this.refreshEmitter.event
@@ -26,4 +18,28 @@ export abstract class TreeDataProvider implements vs.TreeDataProvider<vs.TreeIte
     refreshTitle() {
         this.treeView.title = this.origTitle + " (?)"
     }
+}
+
+export class TreeServers extends TreeDataProvider {
+    override getTreeItem(treeNode: vs.TreeItem): vs.TreeItem {
+        return treeNode
+    }
+
+    override getChildren(parentTreeNode?: vs.TreeItem): vs.ProviderResult<vs.TreeItem[]> {
+        const ret: vs.TreeItem[] = [{
+            collapsibleState: vs.TreeItemCollapsibleState.None,
+            iconPath: new vs.ThemeIcon('comment-unresolved'),
+            id: "someTreeItem",
+            command: { title: 'Command Title', command: 'vsChat.menu', arguments: [] },
+            label: "Item Label",
+        }]
+        return ret
+    }
+}
+
+
+export let treeServers = new TreeServers()
+
+export function onInit() {
+    util.regDisp(treeServers.onInit(vs.window.createTreeView('vsChatTreeView', { treeDataProvider: treeServers, showCollapseAll: true })))
 }
