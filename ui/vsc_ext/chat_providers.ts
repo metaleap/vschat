@@ -6,6 +6,7 @@ import fetch from 'node-fetch'
 
 
 export type ServerImpl = {
+    title: string
     curChannelId: number
     channels: ServerChannel[]
     logIn: () => void
@@ -34,7 +35,8 @@ export function newKaffe(): ServerImpl {
     yo.setCustomFetch((reqUrl: string, reqInit?: object): Promise<Response> => {
         return (fetch(reqUrl.toString(), reqInit) as any) as Promise<Response>
     })
-    yo.setApiBaseUrl('https://kaffe.up.railway.app')
+    const host = 'kaffe.up.railway.app'
+    yo.setApiBaseUrl('https://' + host)
     let ret_impl: ServerImpl
     let next_since: string | undefined = undefined
     const do_poll_now = async () => {
@@ -70,6 +72,7 @@ export function newKaffe(): ServerImpl {
     }
 
     ret_impl = {
+        title: host,
         curChannelId: 0,
         channels: [],
         logIn: async () => {
@@ -89,17 +92,21 @@ export function newKaffe(): ServerImpl {
                 onFreshPosts: null,
                 pollingStart: async () => { ret_impl.curChannelId = 0; do_poll_now(); },
             }]
-            const buddies = (await yo.api__userBuddies({})).Buddies
-            for (const buddy of buddies)
-                ret_impl.channels.push({
-                    id: 0,
-                    title: buddy.Nick!,
-                    readOnly: false,
-                    posts: [],
-                    pollingPaused: true,
-                    onFreshPosts: null,
-                    pollingStart: async () => { ret_impl.curChannelId = buddy.Id!; do_poll_now() },
-                })
+            try {
+                const buddies = (await yo.api__userBuddies({})).Buddies
+                for (const buddy of buddies)
+                    ret_impl.channels.push({
+                        id: 0,
+                        title: buddy.Nick!,
+                        readOnly: false,
+                        posts: [],
+                        pollingPaused: true,
+                        onFreshPosts: null,
+                        pollingStart: async () => { ret_impl.curChannelId = buddy.Id!; do_poll_now() },
+                    })
+            } catch (err: any) {
+                util.alert(youtil.errStr(err))
+            }
         },
     }
     return ret_impl

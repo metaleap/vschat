@@ -2,14 +2,19 @@ import * as vs from 'vscode'
 import * as util from './util'
 import * as chat from './chat_providers.js'
 
-export abstract class TreeDataProvider implements vs.TreeDataProvider<vs.TreeItem> {
-    refreshEmitter = new vs.EventEmitter<vs.TreeItem | undefined | null | void>()
+class TreeItem extends vs.TreeItem {
+    server: chat.ServerImpl | null
+    channel: chat.ServerChannel | null
+}
+
+export abstract class TreeDataProvider implements vs.TreeDataProvider<TreeItem> {
+    refreshEmitter = new vs.EventEmitter<TreeItem | undefined | null | void>()
     onDidChangeTreeData = this.refreshEmitter.event
-    treeView: vs.TreeView<vs.TreeItem>
+    treeView: vs.TreeView<TreeItem>
     origTitle: string
-    abstract getTreeItem(treeNode: vs.TreeItem): vs.TreeItem;
-    abstract getChildren(treeNode?: vs.TreeItem): vs.ProviderResult<vs.TreeItem[]>;
-    onInit(treeView: vs.TreeView<vs.TreeItem>) {
+    abstract getTreeItem(treeNode: TreeItem): TreeItem;
+    abstract getChildren(treeNode?: TreeItem): vs.ProviderResult<TreeItem[]>;
+    onInit(treeView: vs.TreeView<TreeItem>) {
         util.regDisp(this.refreshEmitter)
         this.origTitle = treeView.title ?? "bug: put default tree title back into package.json"
         this.treeView = treeView
@@ -21,19 +26,31 @@ export abstract class TreeDataProvider implements vs.TreeDataProvider<vs.TreeIte
 }
 
 export class TreeServers extends TreeDataProvider {
-    override getTreeItem(treeNode: vs.TreeItem): vs.TreeItem {
+    override getTreeItem(treeNode: TreeItem): TreeItem {
         return treeNode
     }
 
-    override getChildren(parentTreeNode?: vs.TreeItem): vs.ProviderResult<vs.TreeItem[]> {
-        const ret: vs.TreeItem[] = [{
-            collapsibleState: vs.TreeItemCollapsibleState.None,
-            iconPath: new vs.ThemeIcon('comment-unresolved'),
-            id: "someTreeItem",
-            command: { title: 'Command Title', command: 'vsChat.menu', arguments: [] },
-            label: "Item Label",
-        }]
-        return ret
+    override getChildren(parentTreeNode?: TreeItem): vs.ProviderResult<TreeItem[]> {
+        if (!parentTreeNode) {
+            return chatServers.map(_ => {
+                const ret = new TreeItem(_.title, vs.TreeItemCollapsibleState.Expanded)
+                ret.id = _.title
+                ret.server = _
+                ret.iconPath = new vs.ThemeIcon('comment-unresolved')
+                return ret
+            })
+        }
+        if (parentTreeNode.channel)
+            return []
+
+        return parentTreeNode.server!.channels.map(_ => {
+            const ret = new TreeItem(_.title, vs.TreeItemCollapsibleState.Expanded)
+            ret.server = parentTreeNode.server!
+            ret.channel = _
+            ret.id = ret.server.title + '_' + _.title
+            ret.iconPath = new vs.ThemeIcon('comment')
+            return ret
+        })
     }
 }
 
@@ -42,7 +59,10 @@ export let treeServers = new TreeServers()
 export let chatServers: chat.ServerImpl[] = []
 
 export function onInit() {
-    chatServers.push(chat.newKaffe())
+    const dummy = chat.newKaffe()
+    dummy.logIn()
+    dummy.loadChannelsList()
+    chatServers.push(dummy)
 
     util.regDisp(treeServers.onInit(vs.window.createTreeView('vsChatTreeView', { treeDataProvider: treeServers, showCollapseAll: true })))
 }

@@ -3,7 +3,9 @@
   "displayName": "vsChat",
   "publisher": "metaleap",
   "version": "0.0.1",
-  "activationEvents": [ "*" ],
+  "activationEvents": [
+    "*"
+  ],
   "main": "ui/vsc_ext/js/app.js",
   "contributes": {
     "views": {
@@ -41,13 +43,12 @@
   "devDependencies": {
     "@types/mocha": "^10.0.1",
     "@types/node": "18.x",
-    "@types/node-fetch": "^2.6.5",
     "@types/vscode": "^1.82.0",
     "@types/vscode-webview": "^1.57.2",
     "@vscode/codicons": "^0.0.33",
     "glob": "^10.3.4",
     "mocha": "^10.2.0",
-    "node-fetch": "^2.7.0",
+    "node-fetch": "^3.3.2",
     "typescript": "^5.2.2"
   }
 }
