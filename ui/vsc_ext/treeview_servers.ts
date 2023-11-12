@@ -1,8 +1,8 @@
 import * as vs from 'vscode'
-import * as sidebar from './treeview'
+import * as parent from './treeview'
 
 
-export class TreeServers extends sidebar.TreeDataProvider {
+export class TreeServers extends parent.TreeDataProvider {
     override getTreeItem(treeNode: vs.TreeItem): vs.TreeItem {
         return treeNode
     }

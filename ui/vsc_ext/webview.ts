@@ -37,7 +37,7 @@ export class VsChatWebViewProvider implements vs.WebviewViewProvider {
             </script>
         </body></html>`
 
-        util.disp(webviewView.webview.onDidReceiveMessage((msg) => this.onMessage(msg)))
+        util.regDisp(webviewView.webview.onDidReceiveMessage((msg) => this.onMessage(msg)))
     }
 
     onMessage(msg: any) {

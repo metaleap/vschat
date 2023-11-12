@@ -1,11 +1,14 @@
 import * as vs from 'vscode'
 import * as util from './util'
-import * as app from './app'
 
 
-import { VsChatWebViewProvider } from './webview'
-let webviewProvider: VsChatWebViewProvider
+import { TreeServers as TreeServers } from './treeview_servers'
+export let treeServers = new TreeServers()
 
+
+export function onInit() {
+    util.regDisp(treeServers.onInit(vs.window.createTreeView('vsChatTreeView', { treeDataProvider: treeServers, showCollapseAll: true })))
+}
 
 export abstract class TreeDataProvider implements vs.TreeDataProvider<vs.TreeItem> {
     refreshEmitter = new vs.EventEmitter<vs.TreeItem | undefined | null | void>()
@@ -15,29 +18,12 @@ export abstract class TreeDataProvider implements vs.TreeDataProvider<vs.TreeIte
     abstract getTreeItem(treeNode: vs.TreeItem): vs.TreeItem;
     abstract getChildren(treeNode?: vs.TreeItem): vs.ProviderResult<vs.TreeItem[]>;
     onInit(treeView: vs.TreeView<vs.TreeItem>) {
-        util.disp(this.refreshEmitter)
-        this.origTitle = treeView.title ?? '?!bug?!'
+        util.regDisp(this.refreshEmitter)
+        this.origTitle = treeView.title ?? "bug: put default tree title back into package.json"
         this.treeView = treeView
         return this.treeView
     }
     refreshTitle() {
         this.treeView.title = this.origTitle + " (?)"
     }
-}
-import { TreeServers as TreeServers } from './treeview_servers'
-export let treeServers = new TreeServers()
-
-
-export function onInit() {
-    util.disp(vs.window.registerWebviewViewProvider('vsChatWebView', webviewProvider = new VsChatWebViewProvider()))
-    util.disp(treeServers.onInit(vs.window.createTreeView('vsChatTreeView', { treeDataProvider: treeServers, showCollapseAll: true })))
-}
-
-export function treeNodeCat(treeNode: vs.TreeItem): string {
-    const idx = (treeNode.id as string).indexOf(':') as number
-    return (treeNode.id as string).substring(0, idx)
-}
-
-export function showWebview() {
-    webviewProvider.webView?.show(true)
 }

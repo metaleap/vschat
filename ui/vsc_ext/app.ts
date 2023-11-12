@@ -1,26 +1,18 @@
 import * as vs from 'vscode'
 import * as util from './util'
 import * as sidebar from './treeview'
+import { VsChatWebViewProvider } from './webview'
+
+
+let webviewProvider: VsChatWebViewProvider
 
 
 export function activate(context: vs.ExtensionContext) {
 	util.onInit(context)
 
-	util.disp(vs.commands.registerCommand('vsChat.menu', cmdMainMenu))
+	util.regDisp(vs.window.registerWebviewViewProvider('vsChatWebView', webviewProvider = new VsChatWebViewProvider()))
 	sidebar.onInit()
 
+	webviewProvider.webView?.show(true)
 	vs.commands.executeCommand('vsChatTreeView.focus')
-}
-
-function cmdMainMenu() {
-	let itemConfig: vs.QuickPickItem = { label: "Config...", iconPath: new vs.ThemeIcon('tools'), alwaysShow: true }
-	let items: vs.QuickPickItem[] = [itemConfig]
-
-	vs.window.showQuickPick(items, { title: "vsChat" }).then((item) => {
-		switch (item) {
-			case itemConfig:
-				sidebar.showWebview()
-				break
-		}
-	})
 }
