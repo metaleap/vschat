@@ -31,7 +31,9 @@ export function newTwitch(): ServerImpl {
 }
 
 export function newKaffe(): ServerImpl {
-    yo.setCustomFetch(fetch)
+    yo.setCustomFetch((reqUrl: string, reqInit?: object): Promise<Response> => {
+        return (fetch(reqUrl.toString(), reqInit) as any) as Promise<Response>
+    })
     yo.setApiBaseUrl('https://kaffe.up.railway.app')
     let ret_impl: ServerImpl
     let next_since: string | undefined = undefined
