@@ -58,8 +58,8 @@ export class TreeServers extends TreeDataProvider {
 export let treeServers = new TreeServers()
 export let chatServers: chat.ServerImpl[] = []
 
-export function onInit() {
-    const dummy = chat.newKaffe()
+export async function onInit() {
+    const dummy = await chat.newKaffe()
     dummy.logIn()
     dummy.loadChannelsList()
     chatServers.push(dummy)

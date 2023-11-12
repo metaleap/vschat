@@ -2,8 +2,6 @@ import * as util from './util.js'
 import * as yo from './yo-sdk.js'
 import * as youtil from './yo-util.js'
 
-import fetch from 'node-fetch'
-
 
 export type ServerImpl = {
     title: string
@@ -31,9 +29,17 @@ export function newTwitch(): ServerImpl {
     throw ('TODO')
 }
 
-export function newKaffe(): ServerImpl {
+export async function newKaffe(): Promise<ServerImpl> {
+    const fetch = (await import('node-fetch')) as any
+    const cookie = (await import('fetch-cookie')) as any
+    const fetch_with_cookies = cookie(fetch, new cookie.toughCookie.CookieJar(undefined, {
+        allowSpecialUseDomain: true,
+        rejectPublicSuffixes: false,
+        looseMode: true,
+        prefixSecurity: 'unsafe-disabled',
+    }), false)
     yo.setCustomFetch((reqUrl: string, reqInit?: object): Promise<Response> => {
-        return (fetch(reqUrl.toString(), reqInit) as any) as Promise<Response>
+        return (fetch_with_cookies(reqUrl, reqInit) as any) as Promise<Response>
     })
     const host = 'kaffe.up.railway.app'
     yo.setApiBaseUrl('https://' + host)
