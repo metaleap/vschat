@@ -1,14 +1,12 @@
 import * as vs from 'vscode'
-import * as utils from './utils'
+import * as util from './util'
 import * as sidebar from './treeview'
-
-import fetch from 'node-fetch'
 
 
 export function activate(context: vs.ExtensionContext) {
-	utils.onInit(context)
+	util.onInit(context)
 
-	utils.disp(vs.commands.registerCommand('vsChat.menu', cmdMainMenu))
+	util.disp(vs.commands.registerCommand('vsChat.menu', cmdMainMenu))
 	sidebar.onInit()
 
 	vs.commands.executeCommand('vsChatTreeView.focus')

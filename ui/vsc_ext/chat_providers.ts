@@ -2,6 +2,9 @@ import * as util from './util.js'
 import * as yo from './yo-sdk.js'
 import * as youtil from './yo-util.js'
 
+import fetch from 'node-fetch'
+
+
 export type ServerImpl = {
     curChannelId: number
     channels: ServerChannel[]
@@ -28,6 +31,7 @@ export function newTwitch(): ServerImpl {
 }
 
 export function newKaffe(): ServerImpl {
+    yo.setCustomFetch(fetch)
     yo.setApiBaseUrl('https://kaffe.up.railway.app')
     let ret_impl: ServerImpl
     let next_since: string | undefined = undefined
@@ -68,7 +72,7 @@ export function newKaffe(): ServerImpl {
         channels: [],
         logIn: async () => {
             try {
-                await yo.api__userSignInOrReset({ NickOrEmailAddr: "foo123@bar.baz", PasswordPlain: "foobar" })
+                await yo.api__userSignInOrReset({ NickOrEmailAddr: "dummy@metaleap.net", PasswordPlain: "foobar" })
             } catch (err) {
                 util.alert(youtil.errStr(err))
             }
