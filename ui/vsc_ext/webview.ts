@@ -18,7 +18,6 @@ export class VsChatWebViewProvider implements vs.WebviewViewProvider {
         this.webView.title = "vsChat: le Title"
         this.webView.badge = { tooltip: "TODO: not sure where this ever shows up...", value: 3 }
 
-        util.alert(">>>" + this.webView.webview.cspSource + "<<<")
         this.webView.webview.html = `<!DOCTYPE html>
         <html><head>
             <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
