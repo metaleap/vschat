@@ -1,6 +1,6 @@
 import * as vs from 'vscode'
 import * as util from './util'
-
+import * as chat from './chat_providers.js'
 
 export abstract class TreeDataProvider implements vs.TreeDataProvider<vs.TreeItem> {
     refreshEmitter = new vs.EventEmitter<vs.TreeItem | undefined | null | void>()
@@ -39,7 +39,10 @@ export class TreeServers extends TreeDataProvider {
 
 
 export let treeServers = new TreeServers()
+export let chatServers: chat.ServerImpl[] = []
 
 export function onInit() {
+    chatServers.push(chat.newKaffe())
+
     util.regDisp(treeServers.onInit(vs.window.createTreeView('vsChatTreeView', { treeDataProvider: treeServers, showCollapseAll: true })))
 }
